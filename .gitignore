@@ -1,0 +1,17 @@
+# the true price of a pretty laptop
+**/.DS_Store
+
+# don't commit passwords
+.env*
+
+# Dependency directories
+node_modules/
+
+# turtleDB uses this file and should ignore git stuff
+.git/
+
+# git uses this file and should ignore turtleDB stuff
+.turtleDB/
+
+# Optional REPL history
+.node_repl_history

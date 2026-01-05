@@ -1,0 +1,13 @@
+{
+  "name": "turtledb.com",
+  "version": "0.0.0",
+  "description": "website for turtb",
+  "repository": "git@github.com:dtudury/turtledb.com.git",
+  "author": "David Tudury <david.tudury@gmail.com>",
+  "license": "AGPL-3.0-only",
+  "scripts": {
+    "start": "npx turtb --env-file .env",
+    "local": "../turtb/bin/turtb.js --env-file .env",
+    "canary": "open '/Applications/Google Chrome Canary.app' --args --ignore-certificate-errors https://localhost:8080/"
+  }
+}

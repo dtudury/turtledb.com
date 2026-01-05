@@ -1,0 +1,22 @@
+import { AS_REFS } from './turtb/lib/turtle/codecs/CodecType.js'
+import { TurtleDB } from './turtb/lib/turtle/connections/TurtleDB.js'
+import { Signer } from './turtb/lib/turtle/Signer.js'
+import { TurtleDictionary } from './turtb/lib/turtle/TurtleDictionary.js'
+import { Workspace } from './turtb/lib/turtle/Workspace.js'
+import { Recaller } from './turtb/lib/utils/Recaller.js'
+import { webSocketMuxFactory } from './turtb/lib/utils/webSocketMuxFactory.js'
+
+const cpk = document.baseURI.match(/(?<=\/)[0-9A-Za-z]{50}(?=\/)/)?.[0]
+window.cpk = cpk
+window.TurtleDictionary = TurtleDictionary
+window.Signer = Signer
+window.Workspace = Workspace
+window.AS_REFS = AS_REFS
+
+const recaller = new Recaller('web client')
+const turtleDB = new TurtleDB('public/index.js', recaller)
+window.turtleDB = turtleDB
+
+webSocketMuxFactory(turtleDB, tbMux => {
+  window.tbMux = tbMux
+})
