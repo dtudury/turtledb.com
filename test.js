@@ -11,15 +11,15 @@ import { AS_REFS } from './turtb/lib/turtle/codecs/CodecType.js'
 const recaller = new Recaller('test.js')
 const turtleDB = new TurtleDB('test.js', recaller)
 
-const cpk = document.baseURI.match(/(?<=\/)[0-9A-Za-z]{50}(?=\/)/)?.[0]
-if (!cpk) throw new Error('used to hardcode "cv6t981m0a2ou7fil4f88ujf6kpj2lojceycv1gdcq23wlzqi2"')
+const defaultPublicKey = document.cookie.match(/\bcpk=([a-z0-9]{50})\b/)?.[1]
+if (!defaultPublicKey) throw new Error('needs cpk')
 
 const path = ['document', 'value']
 
-webSocketMuxFactory(turtleDB, async tbMux => {
+webSocketMuxFactory(turtleDB, defaultPublicKey, async tbMux => {
   window.tbMux = tbMux
 
-  const turtleBranch = await turtleDB.summonBoundTurtleBranch(cpk)
+  const turtleBranch = await turtleDB.summonBoundTurtleBranch(defaultPublicKey)
 
   let alreadyRan
   turtleBranch.recaller.watch('load-tests', async () => {

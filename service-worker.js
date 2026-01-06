@@ -6,7 +6,7 @@
 import { TurtleBranchMultiplexer } from './turtb/lib/turtle/connections/TurtleBranchMultiplexer.js'
 import { TurtleDB } from './turtb/lib/turtle/connections/TurtleDB.js'
 import { Signer } from './turtb/lib/turtle/Signer.js'
-import { defaultPublicKey, handleRedirect } from './turtb/lib/utils/handleRedirect.js'
+import { handleRedirect } from './turtb/lib/utils/handleRedirect.js'
 import { logError, logInfo } from './turtb/lib/utils/logger.js'
 import { withoutServiceWorker } from './turtb/lib/utils/webSocketMuxFactory.js'
 
@@ -75,6 +75,7 @@ const contentTypeByExtension = {
 }
 
 serviceWorkerGlobalScope.addEventListener('fetch', fetchEvent => {
+  const defaultPublicKey = new URL(serviceWorkerGlobalScope.location).searchParams.get('cpk')
   const url = new URL(fetchEvent.request.url)
   const redirectPromise = handleRedirect(
     url.pathname,
