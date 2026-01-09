@@ -13,13 +13,19 @@ const turtleDB = new TurtleDB('test.js', recaller)
 
 const defaultPublicKey = document.cookie.match(/\bcpk=([a-z0-9]{50})\b/)?.[1]
 if (!defaultPublicKey) throw new Error('needs cpk')
+const moduleName = new URL(window.location).searchParams.get('module')
+if (!moduleName) throw new Error('needs module')
 
 const path = ['document', 'value']
 
 webSocketMuxFactory(turtleDB, defaultPublicKey, async tbMux => {
   window.tbMux = tbMux
+  const thisBranch = await turtleDB.summonBoundTurtleBranch(defaultPublicKey)
+  const symlink = thisBranch.lookupFile(moduleName).symlink
+  const modulePublicKey = symlink.match(/\b([a-z0-9]{50})\b/)?.[1]
 
-  const turtleBranch = await turtleDB.summonBoundTurtleBranch(defaultPublicKey)
+  const turtleBranch = await turtleDB.summonBoundTurtleBranch(modulePublicKey)
+  console.log(turtleBranch)
 
   let alreadyRan
   turtleBranch.recaller.watch('load-tests', async () => {
@@ -30,7 +36,7 @@ webSocketMuxFactory(turtleDB, defaultPublicKey, async tbMux => {
       const paths = Object.keys(fsRefs).filter(path => /\.test\.js$/.test(path))
       // globalTestRunner.clearChildren()
       for (const path of paths) {
-        const importPath = `./${path}?address=${fsRefs[path]}&head=${turtleBranch.length - 1}` // include head in path so that all tests rerun on any change
+        const importPath = `./${moduleName}/${path}?address=${fsRefs[path]}&head=${turtleBranch.length - 1}` // include head in path so that all tests rerun on any change
         try {
           await import(importPath)
         } catch (error) {
